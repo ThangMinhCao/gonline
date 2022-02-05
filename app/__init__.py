@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_socketio import SocketIO, emit
 from .services import service_blueprint
-from .events import database_blueprint
+from .database import database_blueprint
 
 socketio = SocketIO()
 

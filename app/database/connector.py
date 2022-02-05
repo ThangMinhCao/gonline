@@ -1,14 +1,10 @@
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-# from sqlalchemy.orm import sessionmaker
-from settings import DATABASE_URL
+from flask_sqlalchemy import SQLAlchemy
+import os
+from settings import DATABASE_URI
 
-SQLALCHEMY_DATABASE_URL = DATABASE_URL
+db = SQLAlchemy()
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
 
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-db = declarative_base()
+def init_database(app):
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URI
+    db.init_app(app)

@@ -3,3 +3,4 @@
 gonline_env/
 .env
 *.db
+__pycache__/
