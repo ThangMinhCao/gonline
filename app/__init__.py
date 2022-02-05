@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_socketio import SocketIO, emit
 from .services import service_blueprint
-from .database import database_blueprint, connector
+from .routes import route_blueprint
+from .database import db, init_database 
 
 socketio = SocketIO()
 
@@ -10,9 +11,9 @@ def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'secret!'
     app.register_blueprint(service_blueprint)
-    # app.register_blueprint(database_blueprint)
-    connector.init_database(app)
+    app.register_blueprint(route_blueprint)
 
+    init_database(app)
     socketio.init_app(app)
 
     return app
