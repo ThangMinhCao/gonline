@@ -1,3 +1,5 @@
 # ignoring environment directories
 .vscode/
 gonline_env/
+.env
+*.db
