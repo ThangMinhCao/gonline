@@ -6,11 +6,3 @@ from .. import socketio
 def on_join(game_id, player_id):
     print(f'Player {player_id} just joined {game_id}')
     join_room(game_id)
-
-
-# @api.route("/")
-# def home():
-#     return {"home": "page"}
-# @api.route("/<string:variable>")
-# def greeting(variable):
-#     return {"hello": variable}
