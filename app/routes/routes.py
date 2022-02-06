@@ -15,7 +15,6 @@ def game():
 
 @route_blueprint.route("/game/<game_id>", methods=["GET"])
 def get_game(game_id):
-    print(game_id)
     return render_template("game.html")
 
 

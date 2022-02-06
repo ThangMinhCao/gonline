@@ -11,9 +11,11 @@
 </div>
 
 <script type="text/javascript" charset="utf-8">
+  let socket;
+
   function loadSocket() {
-    let socket = io("http://127.0.0.1:5000/game");
-    socket.emit("join", {game_id: 12345});
+    socket = io("http://127.0.0.1:5000/");
+    socket.emit("join")
   }
 </script>
 
