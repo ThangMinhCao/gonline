@@ -1,7 +1,8 @@
-eventlet
 Flask
 Flask-SocketIO
 Flask-SQLAlchemy
 python-dotenv
-psycopg2-binary
+eventlet
 shortuuid
+flask-cors
+psycopg2-binary
