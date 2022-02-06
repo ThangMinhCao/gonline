@@ -1,11 +1,12 @@
-from flask import jsonify, redirect, render_template, request, url_for
+from flask import jsonify, render_template, send_from_directory
+
 from . import route_blueprint
 from app.models import Game
 from app.database.connector import db
 
 
 @route_blueprint.route("/game", methods=["POST"])
-def game():
+def create_game():
     # create a room game in DB
     new_game = Game()
     db.session.add(new_game)
@@ -13,8 +14,8 @@ def game():
     return jsonify({"room_id": new_game.id})
 
 
-@route_blueprint.route("/game/<game_id>", methods=["GET"])
-def get_game(game_id):
+@route_blueprint.route("/game/<game_id>")
+def render_game():
     return render_template("game.html")
 
 
