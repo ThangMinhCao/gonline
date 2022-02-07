@@ -1,25 +1,19 @@
-from flask import jsonify, render_template, send_from_directory
-
+from flask import render_template, jsonify
+from app.services import room
 from . import route_blueprint
-from app.models import Game
-from app.database.connector import db
 
 
 @route_blueprint.route("/game", methods=["POST"])
-def create_game():
-    # create a room game in DB
-    new_game = Game()
-    db.session.add(new_game)
-    db.session.commit()
-    return jsonify({"room_id": new_game.id})
+def on_create_room():
+    return jsonify(room.add_room().id)
 
 
 @route_blueprint.route("/game/<game_id>")
-def render_game():
-    return render_template("game.html")
+def render_game(game_id):
+    return render_template("game.html", game_id=game_id)
 
 
 @route_blueprint.route("/")
 @route_blueprint.route("/home")
-def home():
+def render_home():
     return render_template("index.html")

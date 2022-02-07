@@ -1,5 +1,5 @@
 from app.database.connector import db
-import shortuuid
+from shortuuid import uuid
 
 
 class Game(db.Model):
@@ -11,7 +11,7 @@ class Game(db.Model):
     ended = db.Column(db.Boolean, nullable=False)
 
     def __init__(self):
-        self.id = shortuuid.uuid()
+        self.id = uuid()
         self.ended = False
 
 
@@ -20,11 +20,14 @@ class Participant(db.Model):
 
     id = db.Column(db.String, primary_key=True)
     game_id = db.Column(db.String, db.ForeignKey("game.id"), nullable=False)
-    name = db.Column(db.String(20), nullable=False)
+    moves = db.relationship("Move", backref="participant")
+    is_host = db.Column(db.Boolean, default=False)
 
-    def __init__(self, name="Unknown"):
-        self.id = shortuuid.uuid()
-        self.name = name
+    def __init__(self, game_id):
+        self.id = uuid()
+        self.game_id = game_id
+        if not Game.query.filter_by(id=game_id).first().participants:
+            self.is_host = True
 
 
 class Move(db.Model):
@@ -33,7 +36,10 @@ class Move(db.Model):
     x = db.Column(db.Integer, primary_key=True)
     y = db.Column(db.Integer, primary_key=True)
     game_id = db.Column(db.String, db.ForeignKey("game.id"), primary_key=True)
+    player_id = db.Column(db.ForeignKey("participant.id"), nullable=False)
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, game_id, player_id):
         self.x = x
         self.y = y
+        self.game_id = game_id
+        self.player_id = player_id

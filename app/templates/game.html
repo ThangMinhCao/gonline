@@ -1,18 +1,17 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-
   <div class="container">
     <h1>Game room</h1>
-    <button>Join Room</button>
+    <input name="x" placeholder="X position" min="0" max="19" type="number" />
+    <input name="y" placeholder="Y position" min="0" max="19" type="number" />
+    <button>Play this move</button>
   </div>
 
   {% block javascript %}
-
     <script type="text/javascript">
+      gameId = "{{ game_id }}"
       {% include "/static/game.js" %}
     </script>
-
   {% endblock %}
-
 {% endblock %}
