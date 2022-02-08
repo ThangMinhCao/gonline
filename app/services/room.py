@@ -1,4 +1,5 @@
 from app.database import db
+from app.database.controller import query_first_by_id
 from app.database.models import Game, Participant
 
 
@@ -27,12 +28,12 @@ def add_player(game_id):
 
 
 def remove_room(game_id):
-    Game.query.filter_by(id=game_id).delete()
+    query_first_by_id(Game, game_id).delete()
     db.session.commit()
 
 
 def number_of_participant(game_id):
-    return len(Game.query.filter_by(id=game_id).first().participants)
+    return len(query_first_by_id(Game, game_id).participants)
 
 
 def is_room_available(game_id):
@@ -42,6 +43,6 @@ def is_room_available(game_id):
     :return: boolean
     """
     return not (
-        Game.query.filter_by(id=game_id).first() == None or
+        query_first_by_id(Game, game_id) == None or
         number_of_participant(game_id) == 2
     )

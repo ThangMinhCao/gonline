@@ -13,13 +13,13 @@ def move(game_id, player_id, position):
     i, j = position
 
     if query_move(i, j, game_id):
-        return False
+        return
 
     new_move = Move(i, j, game_id, player_id)
     db.session.add(new_move)
     db.session.commit()
 
-    return True
+    return new_move
 
 
 def is_finished(game_id, pos):

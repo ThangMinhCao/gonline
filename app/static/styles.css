@@ -42,3 +42,7 @@
   height: var(--piece-diameter);
   border-radius: 50%;
 }
+
+.hidden {
+  display: none;
+}

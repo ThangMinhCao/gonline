@@ -4,7 +4,7 @@ window.onload = () => {
   renderBoard();
   socket = io("http://127.0.0.1:5000/", { query: `game_id=${gameId}`});
   socket.on("move", (data) => {
-    displayMove(...data.position, data.player_id)
+    displayMove(...data.position, data.color)
   });
 }
 
@@ -26,17 +26,17 @@ function renderBoard() {
 }
 
 function renderPlayedMoves() {
-  moves.forEach(([i, j, player_id]) => displayMove(i, j, player_id));
+  moves.forEach(([i, j, color]) => displayMove(i, j, color));
 }
 
 function onMove(i, j) {
   socket.emit("move", { i, j, player_id: playerId })
 };
 
-function displayMove(i, j, player_id) {
+function displayMove(i, j, color) {
   const cell = document.getElementById(`${i}-${j}`);
   const piece = document.createElement("span");
   piece.className = "piece"
-  piece.style.background = "black";
+  piece.style.background = color;
   cell.appendChild(piece);
 };

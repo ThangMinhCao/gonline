@@ -3,7 +3,9 @@
 {% block content %}
   <div class="container">
     <h1>Game room</h1>
-    <p><b>Share room id:</b> {{ player_id }}</p>
+    {% if is_host %}
+      <p id="share-room"><b>Share room id:</b> {{ game_id }}</p>
+    {% endif %}
     <input name="x" placeholder="X position" min="0" max="19" type="number" />
     <input name="y" placeholder="Y position" min="0" max="19" type="number" />
     <button>Play this move</button>
