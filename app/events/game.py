@@ -14,4 +14,8 @@ def on_move(data):
         new_move = move(game_id, player_id, pos)
 
         if new_move:
-            socketio.emit("move", { "position": pos, "player_id": player_id, "color": new_move.player.color }, to=game_id)
+            socketio.emit("move",
+                          { "position": pos,
+                            "player_id": player_id,
+                            "color": new_move.player.color },
+                          to=game_id)
