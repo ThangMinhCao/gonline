@@ -7,7 +7,7 @@ class Game(db.Model):
     __tablename__ = "game"
 
     id = db.Column(db.String, primary_key=True)
-    participants = db.relationship("Participant", backref="game")
+    participants = db.relationship("Participant", backref="game", cascade="all, delete-orphan")
     current_player = db.Column(db.String)
     moves = db.relationship("Move", back_populates="game")
     started = db.Column(db.Boolean, nullable=False)
@@ -24,7 +24,7 @@ class Participant(db.Model):
 
     id = db.Column(db.String, primary_key=True)
     game_id = db.Column(db.String, db.ForeignKey("game.id"), nullable=False)
-    moves = db.relationship("Move", back_populates="player")
+    moves = db.relationship("Move", back_populates="player", cascade="all, delete-orphan")
     is_host = db.Column(db.Boolean, default=False)
     color = db.Column(db.String, default=DEFAULT_PIECE_COLOR)
 
@@ -44,7 +44,7 @@ class Move(db.Model):
     game_id = db.Column(db.String, db.ForeignKey("game.id"), primary_key=True)
     game = db.relationship("Game", back_populates="moves")
     player_id = db.Column(db.ForeignKey("participant.id"), nullable=False)
-    player = db.relationship("Participant", back_populates="moves")
+    player = db.relationship("Participant", back_populates="moves", lazy="subquery")
 
     def __init__(self, i, j, game_id, player_id):
         self.i = i

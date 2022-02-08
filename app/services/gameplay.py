@@ -37,7 +37,7 @@ def move(game_id, player_id, position):
 
     switch_turn(new_move.game)
 
-    return (new_move, is_finished(new_move.game, (i, j)))
+    return (new_move, is_finished(new_move.game, (i, j, player_id)))
 
 
 def valid_move(pos, game_id, player_id):
@@ -51,7 +51,6 @@ def valid_move(pos, game_id, player_id):
            game.started and \
            game.current_player == player_id and \
            query_move(i, j, game_id) == None
-    
 
 
 def switch_turn(game):
@@ -60,7 +59,7 @@ def switch_turn(game):
     db.session.commit()
 
 
-def is_finished(game, pos):
+def is_finished(game, move_info):
     """
     Query moves and generate the current state of the board.
     Then check if game is finished after current move.
@@ -69,6 +68,32 @@ def is_finished(game, pos):
     :return: boolean
     """
     move_set = set(map(lambda move: (move.i, move.j, move.player_id), game.moves))
-    print(move_set)
-    # return check_finished
-    return False
+
+    base_directions = [(-1, 0), (-1, -1), (0, -1), (1, -1)]
+    for dir in base_directions:
+        if search_one_axis(move_info, dir, move_set):
+            db.session.delete(game)
+            db.session.commit()
+            return True
+
+    # return check_finishedmove
+
+
+def search_one_axis(move_info, base_dir, move_set):
+    count = count_continuous_pieces(move_info, base_dir, move_set) \
+            + count_continuous_pieces(move_info, (-base_dir[0], -base_dir[1]), move_set) \
+            - 1
+    
+    if count >= 5:
+        return True
+
+
+def count_continuous_pieces(move_info, dir, move_set):
+    i, j, player_id = move_info
+
+    if i < 0 or j < 0 or i > 18 or j > 18 or (i, j, player_id) not in move_set:
+        return 0
+
+    return 1 + count_continuous_pieces((i + dir[0], j + dir[1], player_id), dir, move_set)
+    
+    

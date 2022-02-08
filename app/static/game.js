@@ -2,15 +2,22 @@ let socket;
 
 window.onload = () => {
   renderBoard();
-  socket = io("http://127.0.0.1:5000/", { query: `game_id=${gameId}`});
+  socket = io("http://127.0.0.1:5000/", { query: `game_id=${gameId}` });
 
   socket.on("move", (data) => {
-    displayMove(...data.position, data.color)
-    toggleGameStatus(data.next_player)
+    displayMove(...data.position, data.color);
+
+    if (data.is_finished) {
+      document.getElementById("turn-status").textContent =
+        data.next_player === playerId ? "You lose." : "You win.";
+      socket.disconnect();
+    } else {
+      toggleGameStatus(data.next_player);
+    }
   });
 
   if (isHost) {
-    console.log("Waiting for player")
+    console.log("Waiting for player");
     socket.on("player_joined", (ready) => {
       if (ready) toggleStartButton("enable");
     });
@@ -24,17 +31,17 @@ window.onload = () => {
       socket.off("player_joined");
     }
   });
-}
+};
 
 function renderBoard() {
-  const board = document.getElementById("board")
+  const board = document.getElementById("board");
 
   for (let i = 0; i < 19; i++) {
     for (let j = 0; j < 19; j++) {
       const cell = document.createElement("div");
       cell.id = `${i}-${j}`;
-      cell.className = "cell"
-      cell.addEventListener("click", () => onMove(i, j))
+      cell.className = "cell";
+      cell.addEventListener("click", () => onMove(i, j));
 
       board.appendChild(cell);
     }
@@ -57,10 +64,8 @@ function toggleGameStatus(nextPlayerId) {
 
 function toggleStartButton(state) {
   const button = document.getElementById("start-button");
-  if (state === "disable")
-    button.disabled = "disabled";
-  else
-    button.removeAttribute("disabled");
+  if (state === "disable") button.disabled = "disabled";
+  else button.removeAttribute("disabled");
 }
 
 function onStart() {
@@ -72,13 +77,13 @@ function renderPlayedMoves() {
 }
 
 function onMove(i, j, color) {
-  socket.emit("move", { i, j, player_id: playerId })
-};
+  socket.emit("move", { i, j, player_id: playerId });
+}
 
 function displayMove(i, j, color) {
   const cell = document.getElementById(`${i}-${j}`);
   const piece = document.createElement("span");
-  piece.className = "piece"
+  piece.className = "piece";
   piece.style.background = color;
   cell.appendChild(piece);
-};
+}
