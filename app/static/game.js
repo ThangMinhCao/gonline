@@ -2,7 +2,7 @@ let socket;
 
 window.onload = () => {
   renderBoard();
-  socket = io("http://127.0.0.1:5000/", { query: `game_id=${gameId}` });
+  socket = io(PUBLIC_URL, { query: `game_id=${gameId}` });
 
   socket.on("move", (data) => {
     displayMove(...data.position, data.color);

@@ -2,8 +2,7 @@ from flask import render_template, jsonify
 from app.services import room, auth
 from app.database.models import Game, Participant
 from app.database.controller import query_first_by_id
-from app.services.gameplay import start_game
-from app.events import socketio
+from settings import PUBLIC_URL
 from . import route_blueprint
 
 
@@ -44,7 +43,8 @@ def render_game_page(token):
                                player_id=player_id,
                                moves=played_moves,
                                is_host=queried_participant.is_host,
-                               started=queried_game.started)
+                               started=queried_game.started,
+                               public_url=PUBLIC_URL)
     except ValueError as err:
         return str(err), 400
 

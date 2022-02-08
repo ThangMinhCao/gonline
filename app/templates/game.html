@@ -16,11 +16,12 @@
 
   {% block javascript %}
     <script type="text/javascript">
-      const gameId = "{{ game_id }}";
-      const playerId = "{{ player_id }}";
+      const gameId = {{ game_id|tojson }};
+      const playerId = {{ player_id|tojson }};
       const moves = {{ moves|tojson|safe }};
       const started = {{ started|tojson }}
       const isHost = {{ is_host|tojson }}
+      const PUBLIC_URL = {{ public_url|tojson }}
     </script>
     <script src="{{ url_for('static', filename='game.js') }}" type="text/javascript"></script>
   {% endblock %}
