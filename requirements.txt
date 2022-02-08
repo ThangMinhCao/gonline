@@ -6,3 +6,4 @@ eventlet
 shortuuid
 flask-cors
 psycopg2-binary
+pyjwt

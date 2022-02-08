@@ -1,1 +1,1 @@
-from . import gameplay, room
+from . import gameplay, room, auth

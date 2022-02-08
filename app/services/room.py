@@ -18,11 +18,21 @@ def add_player(game_id):
     Add a new player to DB 
     :param session_id: request sid of the client
     :param game_id: string
-    :return: Participant object created
+    :return: Participant id
     """
     new_player = Participant(game_id)
     db.session.add(new_player)
     db.session.commit()
+    return new_player.id
+
+    
+def remove_room(game_id):
+    Game.query.filter_by(id=game_id).delete()
+    db.session.commit()
+
+
+def number_of_participant(game_id):
+    return len(Game.query.filter_by(id=game_id).first().participants)
 
 
 def is_room_available(game_id):
@@ -33,5 +43,5 @@ def is_room_available(game_id):
     """
     return not (
         Game.query.filter_by(id=game_id).first() == None or
-        len(Participant.query.all()) == 2
+        number_of_participant(game_id) == 2
     )

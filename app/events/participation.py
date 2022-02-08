@@ -9,20 +9,31 @@ def on_join_game(data):
     game_id = data["game_id"]
     session["game_id"] = game_id
 
-    print("Join roommm------------------", request.sid)
+    # if not room.is_room_available(game_id):
+    #     socketio.emit("participation", {"success": False, "message": "Room not available."}, to=request.sid)
+    # else:
 
-    if not room.is_room_available(game_id):
-        socketio.emit("participation", {"success": False, "message": "Room not available."}, to=request.sid)
-    else:
-        room.add_player(game_id)
-
-        join_room(game_id)
-        socketio.emit("participation", {"success": True, "message": "A player has joined."}, to=game_id)
+    join_room(game_id)
+    socketio.emit("participation", {"success": True, "message": "A player has joined."}, to=game_id)
 
 
-@socketio.on("player_disconnecting")
+@socketio.on("disconnect")
 def on_leave_game():
+    print("Left")
+
+
+@socketio.on("player_disconnect")
+def on_leave_game():
+    print("A player disconnected.")
     game_id = session["game_id"]
 
     leave_room(game_id)
     socketio.emit("participation", "A player has left.", to=game_id)
+
+
+@socketio.on("cancel_join")
+def on_cancel_join(game_id):
+    print("Cancelling:", game_id)
+    if room.number_of_participant(game_id) == 0:
+        print("A room deleted.")
+        room.remove_room(game_id)

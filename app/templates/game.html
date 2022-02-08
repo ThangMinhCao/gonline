@@ -3,15 +3,25 @@
 {% block content %}
   <div class="container">
     <h1>Game room</h1>
+    <p><b>Share room id:</b> {{ player_id }}</p>
     <input name="x" placeholder="X position" min="0" max="19" type="number" />
     <input name="y" placeholder="Y position" min="0" max="19" type="number" />
     <button>Play this move</button>
+
+    <div class="board">
+      {% for i in range(19) %}
+        {% for j in range(19) %}
+          <div class="cell" id="{{ i }}-{{ j }}" onclick=""></div>
+        {% endfor %}
+      {% endfor %}
+    </div>
   </div>
 
   {% block javascript %}
     <script type="text/javascript">
       gameId = "{{ game_id }}"
-      {% include "/static/game.js" %}
+      playerId = "{{ player_id }}"
     </script>
+    <script src="{{ url_for('static', filename='game.js') }}" type="text/javascript"></script>
   {% endblock %}
 {% endblock %}

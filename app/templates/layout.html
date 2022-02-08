@@ -7,9 +7,10 @@
     <meta name="description" content="Online multiplayer Go">
     <meta name="author" content="Minh Thang Cao">
     <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   </head>
 
-  <body onbeforeunload="alert('hello')">
+  <body>
     <script src="https://cdn.socket.io/4.4.1/socket.io.min.js" integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H" crossorigin="anonymous"></script>
 
     {% block content %}{% endblock %}
