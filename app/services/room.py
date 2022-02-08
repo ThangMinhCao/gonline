@@ -32,17 +32,15 @@ def remove_room(game_id):
     db.session.commit()
 
 
-def number_of_participant(game_id):
-    return len(query_first_by_id(Game, game_id).participants)
-
-
 def is_room_available(game_id):
     """
     Check if a game room is available
     :param game_id: string
     :return: boolean
     """
-    return not (
-        query_first_by_id(Game, game_id) == None or
-        number_of_participant(game_id) == 2
-    )
+    game_room = query_first_by_id(Game, game_id)
+    return game_room and len(game_room.participants) < 2
+
+
+def toggle_game_state(game_id, start=True):
+    query_first_by_id(Game, game_id).started = start

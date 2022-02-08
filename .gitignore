@@ -4,3 +4,4 @@ gonline_env/
 .env
 *.db
 __pycache__/
+run.sh

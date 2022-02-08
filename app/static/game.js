@@ -3,8 +3,26 @@ let socket;
 window.onload = () => {
   renderBoard();
   socket = io("http://127.0.0.1:5000/", { query: `game_id=${gameId}`});
+
   socket.on("move", (data) => {
     displayMove(...data.position, data.color)
+    toggleGameStatus(data.next_player)
+  });
+
+  if (isHost) {
+    console.log("Waiting for player")
+    socket.on("player_joined", (ready) => {
+      if (ready) toggleStartButton("enable");
+    });
+  }
+
+  socket.on("game_started", (nextPlayerId) => {
+    toggleGameStatus(nextPlayerId);
+
+    if (isHost) {
+      toggleStartButton("disable");
+      socket.off("player_joined");
+    }
   });
 }
 
@@ -25,11 +43,35 @@ function renderBoard() {
   renderPlayedMoves();
 }
 
+function toggleGameStatus(nextPlayerId) {
+  const turnStatus = document.getElementById("turn-status");
+  const board = document.getElementById("board");
+  if (nextPlayerId === playerId) {
+    turnStatus.textContent = "Your turn.";
+    board.style.pointerEvents = "all";
+  } else {
+    turnStatus.textContent = "Opponent's turn.";
+    board.style.pointerEvents = "none";
+  }
+}
+
+function toggleStartButton(state) {
+  const button = document.getElementById("start-button");
+  if (state === "disable")
+    button.disabled = "disabled";
+  else
+    button.removeAttribute("disabled");
+}
+
+function onStart() {
+  socket.emit("start_game", gameId);
+}
+
 function renderPlayedMoves() {
   moves.forEach(([i, j, color]) => displayMove(i, j, color));
 }
 
-function onMove(i, j) {
+function onMove(i, j, color) {
   socket.emit("move", { i, j, player_id: playerId })
 };
 

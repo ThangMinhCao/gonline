@@ -2,6 +2,8 @@ from flask import render_template, jsonify
 from app.services import room, auth
 from app.database.models import Game, Participant
 from app.database.controller import query_first_by_id
+from app.services.gameplay import start_game
+from app.events import socketio
 from . import route_blueprint
 
 
@@ -18,8 +20,7 @@ def on_join_room(game_id):
         return "This room is not available.", 400
 
     player_id = room.add_player(game_id)
-    json_return = jsonify(auth.encode_token(game_id, player_id))
-    return json_return
+    return jsonify(auth.encode_token(game_id, player_id))
 
 
 @route_blueprint.route("/<token>", methods=["GET"])
@@ -35,15 +36,15 @@ def render_game_page(token):
         if queried_game == None or queried_participant == None:
             raise ValueError("Invalid token.")
 
-        # if queried_game.started:
-        played_moves = list(map(lambda move: (
-            move.i, move.j, move.player.color), queried_game.moves))
+        if queried_game.started:
+            played_moves = list(map(lambda move: (move.i, move.j, move.player.color), queried_game.moves))
 
         return render_template("game.html",
                                game_id=game_id,
                                player_id=player_id,
                                moves=played_moves,
-                               is_host=queried_participant.is_host)
+                               is_host=queried_participant.is_host,
+                               started=queried_game.started)
     except ValueError as err:
         return str(err), 400
 

@@ -8,7 +8,8 @@ class Game(db.Model):
 
     id = db.Column(db.String, primary_key=True)
     participants = db.relationship("Participant", backref="game")
-    moves = db.relationship("Move", backref="game")
+    current_player = db.Column(db.String)
+    moves = db.relationship("Move", back_populates="game")
     started = db.Column(db.Boolean, nullable=False)
     ended = db.Column(db.Boolean, nullable=False)
 
@@ -41,6 +42,7 @@ class Move(db.Model):
     i = db.Column(db.Integer, primary_key=True)
     j = db.Column(db.Integer, primary_key=True)
     game_id = db.Column(db.String, db.ForeignKey("game.id"), primary_key=True)
+    game = db.relationship("Game", back_populates="moves")
     player_id = db.Column(db.ForeignKey("participant.id"), nullable=False)
     player = db.relationship("Participant", back_populates="moves")
 
