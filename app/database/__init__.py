@@ -1,1 +1,5 @@
-from . import connector, controller
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
+from . import connector, controller, models

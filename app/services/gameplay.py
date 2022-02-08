@@ -1,16 +1,21 @@
-from app.models import Move
-from app.database.connector import db
+from app.database.models import Move
+from app.database import db
+from app.database.controller import query_move
 
 
-def move(game_id, player_id, pos):
+def move(game_id, player_id, position):
     """
     Play a move
     :param game_id: string
     :param player_id: string
-    :param pos: (x: int, y: int) 
+    :param position: (i: int, j: int) 
     """
-    x, y = pos
-    new_move = Move(x, y, game_id, player_id)
+    i, j = position
+
+    if query_move(i, j, game_id):
+        return False
+
+    new_move = Move(i, j, game_id, player_id)
     db.session.add(new_move)
     db.session.commit()
 

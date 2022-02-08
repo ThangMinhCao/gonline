@@ -1,5 +1,7 @@
-from flask import redirect, render_template, jsonify
+from flask import render_template, jsonify
 from app.services import room, auth
+from app.database.models import Game, Participant
+from app.database.controller import query_first_by_id
 from . import route_blueprint
 
 
@@ -24,7 +26,19 @@ def on_join_room(game_id):
 def render_game_page(token):
     try:
         payload = auth.decode_token(token);
-        return render_template("game.html", game_id=payload["game_id"], player_id=payload["player_id"])
+        game_id = payload["game_id"]
+        player_id = payload["player_id"]
+        queried_game = query_first_by_id(Game, game_id)
+        played_moves = []
+
+        if queried_game == None or \
+           query_first_by_id(Participant, player_id) == None:
+            raise ValueError("Invalid token.")
+        
+        # if queried_game.started:
+        played_moves = list(map(lambda move: (move.i, move.j, move.player_id), queried_game.moves))
+
+        return render_template("game.html", game_id=game_id, player_id=player_id, moves=played_moves)
     except ValueError as err:
         return str(err), 400
 

@@ -1,6 +1,7 @@
 :root {
   --cell-border-thickness: 1px;
   --cell-size: 30px;
+  --piece-diameter: calc(var(--cell-size) * 0.8);
   --board-size: calc((var(--cell-size)) * 19);
 }
 
@@ -8,7 +9,7 @@
   display: none;
 }
 
-.board {
+#board {
   margin: auto;
   margin-top: 50px;
   width: var(--board-size);
@@ -16,10 +17,28 @@
   display: grid;
   grid-template-columns: repeat(19, var(--cell-size));
   grid-auto-rows: var(--cell-size);
+  border-bottom: 2px solid black;
+  border-right: 2px solid black;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
 }
 
 .cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
   width: var(--cell-size);
   height: var(--cell-size);
-  border: 1px solid black;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+}
+
+.cell:hover {
+  background-color: rgb(180, 255, 81);
+}
+
+.piece {
+  width: var(--piece-diameter);
+  height: var(--piece-diameter);
+  border-radius: 50%;
 }

@@ -1,4 +1,4 @@
-from app.database.connector import db
+from . import db
 from shortuuid import uuid
 
 
@@ -8,10 +8,12 @@ class Game(db.Model):
     id = db.Column(db.String, primary_key=True)
     participants = db.relationship("Participant", backref="game")
     moves = db.relationship("Move", backref="game")
+    started = db.Column(db.Boolean, nullable=False)
     ended = db.Column(db.Boolean, nullable=False)
 
     def __init__(self):
         self.id = uuid()
+        self.started = False
         self.ended = False
 
 
@@ -33,13 +35,13 @@ class Participant(db.Model):
 class Move(db.Model):
     __tablename__ = "move"
 
-    x = db.Column(db.Integer, primary_key=True)
-    y = db.Column(db.Integer, primary_key=True)
+    i = db.Column(db.Integer, primary_key=True)
+    j = db.Column(db.Integer, primary_key=True)
     game_id = db.Column(db.String, db.ForeignKey("game.id"), primary_key=True)
     player_id = db.Column(db.ForeignKey("participant.id"), nullable=False)
 
-    def __init__(self, x, y, game_id, player_id):
-        self.x = x
-        self.y = y
+    def __init__(self, i, j, game_id, player_id):
+        self.i = i
+        self.j = j
         self.game_id = game_id
         self.player_id = player_id

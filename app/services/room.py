@@ -1,5 +1,5 @@
-from app.database.connector import db
-from app.models import Game, Participant
+from app.database import db
+from app.database.models import Game, Participant
 
 
 def add_room():
@@ -25,7 +25,7 @@ def add_player(game_id):
     db.session.commit()
     return new_player.id
 
-    
+
 def remove_room(game_id):
     Game.query.filter_by(id=game_id).delete()
     db.session.commit()
