@@ -9,7 +9,7 @@ def add_room():
     :return: Game object created
     """
     new_game = Game()
-    # db.session.add(new_game)
+    db.session.add(new_game)
     db.session.commit()
     return new_game
 

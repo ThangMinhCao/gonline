@@ -1,7 +1,7 @@
 function createRoom() {
   fetch("/game", { method: "POST" })
-    .then(res => console.log(res))
-    // .then(token => window.location.replace(`/${token}`))
+    .then(res => res.json())
+    .then(token => window.location.replace(`/${token}`))
     .catch(err => console.log(err));
 }
 
