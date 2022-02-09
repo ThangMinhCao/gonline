@@ -8,9 +8,12 @@ from . import route_blueprint
 
 @route_blueprint.route("/game", methods=["POST"])
 def on_create_room():
-    game_id = room.add_room().id
-    host_id = room.add_player(game_id)
-    return jsonify(auth.encode_token(game_id, host_id))
+    try:
+        game_id = room.add_room().id
+        host_id = room.add_player(game_id)
+        return jsonify(auth.encode_token(game_id, host_id))
+    except Exception as err:
+        return "Error", 300 
 
 
 @route_blueprint.route("/game/<game_id>", methods=["POST"])
