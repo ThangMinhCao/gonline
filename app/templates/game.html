@@ -6,7 +6,7 @@
     <h4 id="turn-status"></h4>
 
     {% if is_host %}
-      <p id="share-room"><b>Share room id:</b> {{ game_id }}</p>
+      <p id="share-room"><b>Share room id:</b> {{ room_id }}</p>
       <button disabled onclick="onStart()" id="start-button">Start game</button>
     {% endif %}
 
@@ -16,10 +16,9 @@
 
   {% block javascript %}
     <script type="text/javascript">
-      const gameId = {{ game_id|tojson }};
+      const gameId = {{ room_id|tojson }};
       const playerId = {{ player_id|tojson }};
       const moves = {{ moves|tojson|safe }};
-      const started = {{ started|tojson }}
       const isHost = {{ is_host|tojson }}
       const PUBLIC_URL = {{ public_url|tojson }}
     </script>
